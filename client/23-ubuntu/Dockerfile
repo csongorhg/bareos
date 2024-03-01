@@ -24,16 +24,18 @@ ENV BAREOS_REPO http://download.bareos.org/current/xUbuntu_20.04/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update -qq \
- && apt-get -qq -y install --no-install-recommends curl tzdata gnupg gosu \
+ && apt-get -qq -y install --no-install-recommends curl tzdata gnupg gosu python3-pip \
  && curl -Ls $BAREOS_KEY -o /tmp/bareos.key \
  && apt-key --keyring /etc/apt/trusted.gpg.d/breos-keyring.gpg \
     add /tmp/bareos.key \
  && echo "deb $BAREOS_REPO /" > /etc/apt/sources.list.d/bareos.list \
  && apt-get update -qq \
  && apt-get install -qq -y --no-install-recommends \
-    bareos-client mysql-client postgresql-client bareos-tools \
+    bareos-client mysql-client postgresql-client bareos-tools bareos-vmware-plugin \
  && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ && pip install pyvmomi \
+ && rm -rf /var/lib/apt/lists/* \
+ && apt-get install python3-pip
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod a+x /docker-entrypoint.sh
