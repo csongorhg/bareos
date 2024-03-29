@@ -35,7 +35,9 @@ RUN apt-get update -qq \
  && apt-get clean \
  && pip install pyvmomi \
  && rm -rf /var/lib/apt/lists/* \
- && apt-get install python3-pip
+ && apt-get install python3-pip \
+ && pip3 install urllib3 requests
+
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod a+x /docker-entrypoint.sh
